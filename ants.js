@@ -18,10 +18,10 @@ var Ants = function(_options) {
                 'class':     undefined
             }, _options),
         sides = {
-            top: $('<div class="ants ants-top"/>').hide().appendTo('body'),
-            left: $('<div class="ants ants-left"/>').hide().appendTo('body'),
-            bottom: $('<div class="ants ants-bottom"/>').hide().appendTo('body'),
-            right: $('<div class="ants ants-right"/>').hide().appendTo('body')
+            top: $('<div class="ants ants-horizontal ants-top"/>').hide().appendTo('body'),
+            left: $('<div class="ants ants-vertical ants-left"/>').hide().appendTo('body'),
+            bottom: $('<div class="ants ants-horizontal ants-bottom"/>').hide().appendTo('body'),
+            right: $('<div class="ants ants-vertical ants-right"/>').hide().appendTo('body')
         },   
         methods = {
             attach: function(element) {                
