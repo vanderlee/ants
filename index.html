@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>jQuery Marching Ants demo</title>
+		
+		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script type="text/javascript" src="ants.js"></script>
+		<script type="text/javascript">
+			$(function() {				
+				var a = Ants({
+					thickness:	4
+				});			
+
+				$('div.hover:not(.ants)').mouseenter(function() {
+					a.attach(this);    
+				}).mouseout(function() {
+					a.detach();
+				});
+			});
+		</script>
+		
+		<style>
+			body {
+				font-family:			"Segoe UI", Verdana, Helvetica, Arial, sans-serif;
+				font-size:				14px;
+				padding:				4em;
+			}
+
+			div.hover {
+				width: 150px;
+				height: 150px;
+				float: left;
+				margin: 10px;
+				padding: 10px;
+				border: solid 1px red;
+			}
+		</style>
+    </head>
+    <body>
+		<div class="hover">Hover over me</div>
+		<div class="hover">Hover over me</div>
+		<div class="hover">Hover over me</div>
+		<div class="hover">Hover over me</div>
+		<div class="hover">Hover over me</div>
+		<div class="hover">Hover over me</div>
+		<div class="hover">Hover over me</div>
+		<div class="hover">Hover over me</div>
+		<div class="hover">Hover over me</div>
+		<div class="hover">Hover over me</div>
+		<div class="hover">Hover over me</div>
+		<div class="hover">Hover over me</div>
+		<div class="hover">Hover over me</div>
+    </body>
+</html>
