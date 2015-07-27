@@ -76,7 +76,7 @@
 				
 				if (self.options.appendTo === 'element') {
 					target = self.$element;
-				} else if (typeof self.options.appendTo === 'string') {
+				} else {
 					target = self.options.appendTo;
 				}
 
