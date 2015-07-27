@@ -14,7 +14,7 @@ Todo
 ----
 Document all
 Examples and presentation.
-Options: reverse/direction
+Options: reverse=Bool, delay=Int, zIndex=Int, select=Function/selector
 Methods: option, options
 Events: enter(element, index), out(element, index)
 Handle thickness automatically.

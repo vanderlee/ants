@@ -48,7 +48,7 @@
 	};
 
 	$.fn[pluginName].defaults = {
-		'selector':		'>*',
+		'select':		'>*',
 		'thickness':	4,
 
 		'appendTo':		'element',
@@ -88,10 +88,10 @@
 			});
 
 			this.$element
-					.on('mouseenter', this.options.selector, function () {
+					.on('mouseenter', this.options.select, function () {
 						return self._attach(this);
 					})
-					.on('mouseout', this.options.selector, function () {
+					.on('mouseout', this.options.select, function () {
 						return self._detach(this);
 					});
 		},
