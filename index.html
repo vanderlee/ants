@@ -5,18 +5,21 @@
         <title>jQuery Marching Ants demo</title>
 		
 		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-		<script type="text/javascript" src="ants.js"></script>
-		<link href="ants.css" rel="stylesheet" type="text/css"/>
+		<script type="text/javascript" src="jquery.ants.js"></script>
+		<link href="jquery.ants.css" rel="stylesheet" type="text/css"/>
 		<script type="text/javascript">
 			$(function() {				
-				var a = Ants({
-					thickness:	4
-				});			
+				var a = $('#test').ants({
+					selector:	'.hoverable',
+					classname:	'big-blue-ants',
+					offset:		2
+				});
 
-				$('div.hover:not(.ants)').mouseenter(function() {
-					a.attach(this);    
-				}).mouseout(function() {
-					a.detach();
+				$('#add-hoverable').click(function() {
+					$('#test').append('<div class="hoverable">New hoverable</div>');
+				});
+				$('#add-unhoverable').click(function() {
+					$('#test').append('<div class="unhoverable">New Unhoverable</div>');
 				});
 			});
 		</script>
@@ -25,32 +28,49 @@
 			body {
 				font-family:			"Segoe UI", Verdana, Helvetica, Arial, sans-serif;
 				font-size:				14px;
-				padding:				4em;
 			}
 
-			div.hover {
+			div.unhoverable,
+			div.hoverable {
 				width: 150px;
 				height: 150px;
 				float: left;
 				margin: 10px;
 				padding: 10px;
-				border: solid 1px red;
+				border: solid 2px;
+			}
+
+			div.unhoverable {
+				background-color:	#fee;
+				border-color:		red;
+			}
+
+			div.hoverable {
+				background-color:	#efe;
+				border-color:		limegreen;
 			}
 		</style>
     </head>
     <body>
-		<div class="hover">Hover over me</div>
-		<div class="hover">Hover over me</div>
-		<div class="hover">Hover over me</div>
-		<div class="hover">Hover over me</div>
-		<div class="hover">Hover over me</div>
-		<div class="hover">Hover over me</div>
-		<div class="hover">Hover over me</div>
-		<div class="hover">Hover over me</div>
-		<div class="hover">Hover over me</div>
-		<div class="hover">Hover over me</div>
-		<div class="hover">Hover over me</div>
-		<div class="hover">Hover over me</div>
-		<div class="hover">Hover over me</div>
+		<h1>Marching ants</h1>
+		<div id="test">
+			<div class="unhoverable">Unhoverable</div>
+			<div class="hoverable">Hover over me</div>
+			<div class="hoverable">Hover over me</div>
+			<div class="hoverable">Hover over me</div>
+			<div class="hoverable">Hover over me</div>
+			<div class="hoverable">Hover over me</div>
+			<div class="hoverable">Hover over me</div>
+			<div class="hoverable">Hover over me</div>
+			<div class="hoverable">Hover over me</div>
+			<div class="hoverable">Hover over me</div>
+			<div class="hoverable">Hover over me</div>
+			<div class="hoverable">Hover over me</div>
+			<div class="hoverable">Hover over me</div>
+			<div class="hoverable">Hover over me</div>
+		</div>
+		<div style="clear:both"></div>
+		<button id="add-hoverable">Add hoverable</button>
+		<button id="add-unhoverable">Add unhoverable</button>
     </body>
 </html>
