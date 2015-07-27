@@ -14,7 +14,7 @@ Todo
 ----
 Document all
 Examples and presentation.
-Options: offset, reverse/direction, appendTo
+Options: reverse/direction
 Methods: option, options
 Events: enter(element, index), out(element, index)
 Handle thickness automatically.
