@@ -9,10 +9,9 @@
 		<link href="jquery.ants.css" rel="stylesheet" type="text/css"/>
 		<script type="text/javascript">
 			$(function() {				
-				var a = $('#test').ants({
+				$('#test').ants({
 					select:		'.hoverable',
-					classname:	'big-blue-ants',
-					offset:		2
+					classname:	'big-blue-ants'
 				});
 
 				$('#add-hoverable').click(function() {
@@ -20,6 +19,20 @@
 				});
 				$('#add-unhoverable').click(function() {
 					$('#test').append('<div class="unhoverable">New Unhoverable</div>');
+				});
+				$('#reverse').change(function() {
+					$('#test').ants('option', 'reverse', this.checked);
+				});
+				$('#select').change(function() {
+					$('#test').ants('option', 'select', this.checked ? '.hoverable' : '>*');
+				});
+				$('#offset').on('change input',function() {
+					$('#offset-value').text(this.value);
+					$('#test').ants('option', 'offset', this.value);
+				});
+				$('#thickness').on('change input',function() {
+					$('#thickness-value').text(this.value);
+					$('#test').ants('option', 'thickness', this.value);
 				});
 			});
 		</script>
@@ -70,7 +83,10 @@
 			<div class="hoverable">Hover over me</div>
 		</div>
 		<div style="clear:both"></div>
-		<button id="add-hoverable">Add hoverable</button>
-		<button id="add-unhoverable">Add unhoverable</button>
+		<div><button id="add-hoverable">Add hoverable</button><button id="add-unhoverable">Add unhoverable</button></div>
+		<div><label for="reverse">Reverse:</label><input type="checkbox" id="reverse"/></div>
+		<div><label for="select">Green only:</label><input type="checkbox" id="select" checked/></div>
+		<div><label for="offset">Offset:</label><input type="range" min="-10" max="10" value="0" id="offset"/><span id="offset-value">0</span></div>
+		<div><label for="thickness">Thickness</label><input type="range" min="1" max="4" value="4" id="thickness"/><span id="thickness-value">4</span></div>
     </body>
 </html>

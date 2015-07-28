@@ -15,13 +15,13 @@
 	"use strict";
 
 	var pluginName = 'ants',
-			Plugin = function (element, options) {
-				this.element = element;
-				this.$element = $(element);
-				this.options = $.extend({}, $.fn[pluginName].defaults, options);
+		Plugin = function (element, options) {
+			this.element = element;
+			this.$element = $(element);
+			this.options = $.extend({}, $.fn[pluginName].defaults, options);
 
-				this.init();
-			};
+			this.init();
+		};
 
 	$.fn[pluginName] = function (options) {
 		var args = arguments;
@@ -32,7 +32,7 @@
 					$.data(this, 'plugin_' + pluginName, new Plugin(this, options));
 				}
 			});
-		} else if (typeof _options === 'string' && _options[0] !== '_' && options !== 'init') {
+		} else if (typeof options === 'string' && options[0] !== '_' && options !== 'init') {
 			if (Array.prototype.slice.call(args, 1).length == 0 && $.inArray(options, $.fn[pluginName].getters) != -1) {
 				var instance = $.data(this[0], 'plugin_' + pluginName);
 				return instance[options].apply(instance, Array.prototype.slice.call(args, 1));
@@ -48,7 +48,7 @@
 	};
 
 	$.fn[pluginName].defaults = {
-		'select':		'>*',
+		'select':		null,
 		'thickness':	4,
 
 		'appendTo':		'element',
@@ -56,8 +56,8 @@
 		'classname':	'',
 		'reverse':		false,
 
-		'enter':		undefined,
-		'out':			undefined,
+		'enter':		null,
+		'out':			null,
 	};
 
 	Plugin.prototype = {
@@ -81,19 +81,29 @@
 				}
 
 				side.hide().appendTo(target);
-
-				if (self.options.classname) {
-					side.addClass(self.options.classname);
-				}
 			});
 
-			this.$element
-					.on('mouseenter', this.options.select, function () {
-						return self._attach(this);
-					})
-					.on('mouseout', this.options.select, function () {
-						return self._detach(this);
-					});
+			this._handler.mouseenter = function (event) {
+				if (!$(this).hasClass('ants') && self.attached !== this) {
+					self.attached = this;
+					self._attach();
+				}
+			};
+			this._handler.mouseleave = function () {
+				if (!$(this).hasClass('ants') && typeof self.attached !== 'undefined') {
+					self.attached = undefined;
+					return self._detach();
+				}
+			};
+
+			this._option.reverse.call(this, this.options.reverse);
+			this._option.classname.call(this, this.options.classname);
+			this._option.select.call(this, this.options.select);
+		},
+
+		_handler: {
+			mouseenter:	undefined,
+			mouseleave:	undefined,
 		},
 
 		destroy: function () {
@@ -101,19 +111,93 @@
 				side.remove();
 			});
 
+			this.$element.off(this._handler.mouseenter);
+			this.$element.off(this._handler.mouseleave);
 			this.$element.removeData('plugin_' + pluginName);
 		},
 
-		_attach: function (element) {
-			var $element = $(element),
-					width = $element.outerWidth(),
-					height = $element.outerHeight(),
-					offset = $element.offset(),
-					left = offset.left,
-					top = offset.top,
-					bottom = offset.top + height,
-					right = offset.left + width,
-					double = this.options.offset * 2;
+		option: function(option, value) {
+			var self = this;
+
+			if (typeof option === 'object') {
+				$.each(option, function(key, value) {
+					self.option.call(self, key, value);
+				});
+			} else {
+				option = option.toLowerCase();
+				if (typeof this.options[option] !== 'undefined') {
+					if (typeof value === 'undefined') {
+						return this.options[option] || undefined;
+					} else {
+						switch (option) {
+							case 'thickness':
+							case 'offset':
+								value = parseInt(value);
+								break;
+
+							case 'reverse':
+								value = !!value;
+								break;
+						}
+
+						this._option[option] ? this._option[option].call(this, value) : null;
+						this.options[option] = value;
+					}
+				}
+			}
+		},
+
+		_option: {
+			select: function(value) {
+				this.$element.off()
+					.on('mouseenter', value || '> *:not(.ants)', this._handler.mouseenter)
+					.on('mouseleave', value || '> *:not(.ants)', this._handler.mouseleave);
+			},
+			
+			reverse: function(value) {
+				var self = this;
+				$.each(self.sides, function (s, side) {
+					side.toggleClass('ants-reverse', value);
+				});
+			},
+
+			classname: function(value) {
+				var self = this;
+				$.each(self.sides, function (s, side) {
+					if (self.options.classname) {
+						side.removeClass(self.options.classname);
+					}
+					if (value) {
+						side.addClass(value);
+					}
+				});
+			},
+
+			offset: function(value) {
+				if (this.attached) {
+					this.options.offset = value;
+					this._attach();
+				}
+			},
+
+			thickness: function(value) {
+				if (this.attached) {
+					this.options.thickness = value;
+					this._attach();
+				}
+			}
+		},
+
+		_attach: function () {
+			var $element = $(this.attached),
+				width = $element.outerWidth(),
+				height = $element.outerHeight(),
+				offset = $element.offset(),
+				left = offset.left,
+				top = offset.top,
+				bottom = offset.top + height,
+				right = offset.left + width,
+				double = this.options.offset + this.options.offset;
 
 			this.sides.left.css({
 				'height': height + this.options.thickness + double,
@@ -145,10 +229,9 @@
 		},
 		
 		_detach: function () {
-			this.sides.left.hide();
-			this.sides.right.hide();
-			this.sides.top.hide();
-			this.sides.bottom.hide();
+			$.each(this.sides, function (s, side) {
+				side.hide();
+			});
 		}
 	};
 })(jQuery);

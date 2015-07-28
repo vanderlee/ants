@@ -10,5 +10,10 @@
 .ants-left			{	background-position: right;		}
 .ants-right			{	background-position: left;		}
 
+.ants-reverse.ants-top		{	background-position: top;	}
+.ants-reverse.ants-bottom	{	background-position: bottom;		}
+.ants-reverse.ants-left		{	background-position: left;		}
+.ants-reverse.ants-right	{	background-position: right;		}
+
 .ants-horizontal	{	background-image: url('jquery.ants.horizontal.gif');	}
 .ants-vertical		{	background-image: url('jquery.ants.vertical.gif');		}
