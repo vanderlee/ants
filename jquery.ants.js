@@ -48,16 +48,13 @@
 	};
 
 	$.fn[pluginName].defaults = {
-		'select':		null,
-		'thickness':	4,
-
 		'appendTo':		'element',
-		'offset':		0,
 		'classname':	'',
+		'offset':		0,
+		'attachOn':		'hover',
 		'reverse':		false,
-
-		'enter':		null,
-		'out':			null,
+		'select':		null,
+		'thickness':	4
 	};
 
 	Plugin.prototype = {
@@ -83,16 +80,24 @@
 				side.hide().appendTo(target);
 			});
 
-			this._handler.mouseenter = function (event) {
-				if (!$(this).hasClass('ants') && self.attached !== this) {
-					self.attached = this;
-					self._attach();
+			this._handler.attach = function (event) {
+				if ($.isFunction(self.options.select) && !self.options.select.call(this, this)) {
+					return;
+				}
+
+				if (!$(this).hasClass('ants') && self.attachOned !== this) {
+					self.attachOned = this;
+					self._attachOn();
 				}
 			};
-			this._handler.mouseleave = function () {
-				if (!$(this).hasClass('ants') && typeof self.attached !== 'undefined') {
-					self.attached = undefined;
-					return self._detach();
+			this._handler.detach = function () {
+				if ($.isFunction(self.options.select) && !self.options.select.call(this, this)) {
+					return;
+				}
+				
+				if (!$(this).hasClass('ants') && typeof self.attachOned !== 'undefined') {
+					self.attachOned = undefined;
+					self._detach();
 				}
 			};
 
@@ -102,8 +107,8 @@
 		},
 
 		_handler: {
-			mouseenter:	undefined,
-			mouseleave:	undefined,
+			attach:	undefined,
+			detach:	undefined,
 		},
 
 		destroy: function () {
@@ -111,8 +116,10 @@
 				side.remove();
 			});
 
-			this.$element.off(this._handler.mouseenter);
-			this.$element.off(this._handler.mouseleave);
+			if (this._handler.attach) {
+				this.$element.off(this._handler.attach);
+				this.$element.off(this._handler.detach);
+			}
 			this.$element.removeData('plugin_' + pluginName);
 		},
 
@@ -148,10 +155,28 @@
 		},
 
 		_option: {
+			attachOn: function(value) {
+				this.options.attachOn = value;
+				this._option.select(this.options.select);
+			},
+
 			select: function(value) {
-				this.$element.off()
-					.on('mouseenter', value || '> *:not(.ants)', this._handler.mouseenter)
-					.on('mouseleave', value || '> *:not(.ants)', this._handler.mouseleave);
+				if ($.isFunction(value)) {
+					value = null;
+				}
+
+				if (this._handler.attach) {
+					this.$element.off(this._handler.attach);
+					this.$element.off(this._handler.detach);
+				}
+
+				this.$element
+					.on(this.options.attachOn === 'hover' ? 'mouseenter' : 'focusin',
+						value || '>*:not(.ants)',
+						this._handler.attach)
+					.on(this.options.attachOn === 'hover' ? 'mouseleave' : 'focusout',
+						value || '>*:not(.ants)',
+						this._handler.detach);
 			},
 			
 			reverse: function(value) {
@@ -174,22 +199,22 @@
 			},
 
 			offset: function(value) {
-				if (this.attached) {
+				if (this.attachOned) {
 					this.options.offset = value;
-					this._attach();
+					this._attachOn();
 				}
 			},
 
 			thickness: function(value) {
-				if (this.attached) {
+				if (this.attachOned) {
 					this.options.thickness = value;
-					this._attach();
+					this._attachOn();
 				}
 			}
 		},
 
-		_attach: function () {
-			var $element = $(this.attached),
+		_attachOn: function () {
+			var $element = $(this.attachOned),
 				width = $element.outerWidth(),
 				height = $element.outerHeight(),
 				offset = $element.offset(),

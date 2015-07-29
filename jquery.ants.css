@@ -1,8 +1,9 @@
 .ants {
-	position:	absolute;
-	margin:		0;
-	padding:	0;
-	border:		0;
+	display:	block;
+	position:	absolute !important;
+	margin:		0 !important;
+	padding:	0 !important;
+	border:		0 !important;
 }
 
 .ants-top			{	background-position: bottom;	}
@@ -10,10 +11,10 @@
 .ants-left			{	background-position: right;		}
 .ants-right			{	background-position: left;		}
 
-.ants-reverse.ants-top		{	background-position: top;	}
-.ants-reverse.ants-bottom	{	background-position: bottom;		}
-.ants-reverse.ants-left		{	background-position: left;		}
-.ants-reverse.ants-right	{	background-position: right;		}
+.ants-reverse.ants-top		{	background-position: top !important;	}
+.ants-reverse.ants-bottom	{	background-position: bottom !important;		}
+.ants-reverse.ants-left		{	background-position: left !important;		}
+.ants-reverse.ants-right	{	background-position: right !important;		}
 
 .ants-horizontal	{	background-image: url('jquery.ants.horizontal.gif');	}
 .ants-vertical		{	background-image: url('jquery.ants.vertical.gif');		}
