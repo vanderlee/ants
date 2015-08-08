@@ -28,6 +28,7 @@ Todo
 *	Research mouseout/enter with negative offset.
 *	Register jquery plugins et al.
 *	Figure out why jQ 1.8+ is required.
+*	Unittesting, even if minimal
 
 Documentation
 =============
