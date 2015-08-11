@@ -1,6 +1,6 @@
 Ants
 ====
-v0.0.5 - Early preview version
+v1.0 - Early preview version
 
 Copyright &copy; 2015 Martijn W. van der Lee.
 Licensed under the MIT license.
@@ -15,17 +15,14 @@ Current version: https://github.com/vanderlee/ants/archive/master.zip
 
 Source code on Github: https://github.com/vanderlee/ants
 
-Todo
-----
-*	Document all
-*	Examples and presentation.
-*	Options: ?delay=Int, zIndex=Int.
-*	Methods: getAttached
-*	Events: enter(element, index), out(element, index)
-*	Research how to handle gifs/classes.
-*	Research mouseout/enter with negative offset.
-*	Register jquery plugins et al.
-*	Unittesting, even if minimal
+Future plans
+------------
+*	Option "delay" (integer).
+*	Option "zIndex" (integer).
+*	Handle GIF's with options.
+*	Automatically detect GIF width/height.
+*	Research excessive negative offset event triggering.
+*	Unittests
 
 Documentation
 =============
@@ -67,6 +64,10 @@ width/height of the animated GIF pictures used.
 
 Methods
 -------
+### `attached`
+Get the currently attached element as a jQuery object.
+If not currently attached, return `undefined`.
+
 ### `option (optionName)`
 Get the value of the specified option.
 
@@ -75,3 +76,15 @@ Set the value of the specified option and update the
 
 ### `optionObject`
 Set the values of multiple options at once.
+
+Events
+------
+### `attach: null`
+Triggers when the ants attach to a new element.
+Function callback with signature `function(element)`.
+`this` is also set to the attached element.
+
+### `detach: null`
+Triggers when the ants detach from the previously attached element.
+Function callback with signature `function(element)`.
+`this` is also set to the detached element.

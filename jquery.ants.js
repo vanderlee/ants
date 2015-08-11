@@ -47,9 +47,9 @@
 				}
 			});
 		} else if (typeof options === 'string' && options[0] !== '_' && options !== 'init') {
-			if (Array.prototype.slice.call(args, 1).length == 0 && $.inArray(options, $.fn[pluginName].getters) != -1) {
+			if (Array.prototype.slice.call(args, 1).length == 0 && Plugin.prototype.getters[options]) {
 				var instance = $.data(this[0], 'plugin_' + pluginName);
-				return instance[options].apply(instance, Array.prototype.slice.call(args, 1));
+				return instance.getters[options].apply(instance, Array.prototype.slice.call(args, 1));
 			} else {
 				return this.each(function () {
 					var instance = $.data(this, 'plugin_' + pluginName);
@@ -68,7 +68,10 @@
 		'attachOn':		'hover',
 		'reverse':		false,
 		'select':		null,
-		'thickness':	4
+		'thickness':	4,
+
+		'attach':		null,
+		'detach':		null
 	};
 
 	Plugin.prototype = {
@@ -95,6 +98,9 @@
 				if (!$(this).hasClass('ants') && self.attached !== this) {
 					self.attached = this;
 					self._attach();
+					if ($.isFunction(self.options.attach)) {
+						self.options.attach.call(this, this);
+					}
 				}
 			};
 			this._handler.detach = function () {
@@ -105,6 +111,9 @@
 				if (!$(this).hasClass('ants') && typeof self.attached !== 'undefined') {
 					self.attached = undefined;
 					self._detach();
+					if ($.isFunction(self.options.detach)) {
+						self.options.detach.call(this, this);
+					}
 				}
 			};
 
@@ -126,6 +135,12 @@
 			});
 
 			this.$element.removeData('plugin_' + pluginName);
+		},
+
+		getters: {
+			attached: function () {
+				return this.attached ? $(this.attached) : undefined;
+			}
 		},
 
 		option: function(option, value) {
@@ -253,7 +268,7 @@
 				'top': top - this.options.thickness - this.options.offset
 			}).show();
 		},
-		
+
 		_detach: function () {
 			$.each(this.sides, function (s, side) {
 				side.hide();

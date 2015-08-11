@@ -35,6 +35,28 @@
 				background-color:	#efe;
 				border-color:		limegreen;
 			}
+
+			.log {
+				margin:			1em;
+				border:			thin solid silver;
+				height:			100px;
+				overflow:		auto;
+				position:		fixed;
+				right:			1vh;
+				top:			1vh;
+				height:			90vh;
+				width:			8em;
+				background:		#eee;
+			}
+			.log:before {
+				content:		'Log';
+				float:			right;
+				font-weight:	bold;
+				font-size:		65%;
+				background:		silver;
+				color:			white;
+				padding:		1em;
+			}
 		</style>
     </head>
     <body>
@@ -113,6 +135,7 @@
 				<option value="prime">Prime numbers</option>
 				<option value="powers">Powers of 2</option>
 			</select>
+			<div class="log"></div>
 		</div>
 		<script type="text/javascript">
 			$(function() {
@@ -124,8 +147,16 @@
 					};
 
 				$('#example-select-function').ants({
-					select:	functions.odd
+					select:	functions.odd,
+					attach:	function(element) {
+								var number = $('#example-select-function').ants('attached').text();
+								$('.log').append('Attach ' + number + '<br/>');
+							},
+					detach:	function(element) {
+								$('.log').append('Detach ' + $(element).text() + '<br/>');
+							}
 				});
+
 				$('#select-function').change(function() {
 					var name = $(this).val();
 					$('#example-select-function').ants('option', 'select', functions[name]);
@@ -138,7 +169,9 @@
 		<h2>Focus</h2>
 		Just check any of the inputs on this page ☻.
 		<br/>Here are some dummy inputs:
-		<br/><input/><input/><input/><input/><input/><input/><input/><input/><input/><input/>
+		<br/><input/><input/><input/><input/><input/>
+		<br/><input/><input/><input/><input/><input/>
+		<br/><input/><input/><input/><input/><input/>
 		<script type="text/javascript">
 			$(function() {
 				$('body').ants({
