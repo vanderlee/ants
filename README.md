@@ -9,7 +9,7 @@ jQuery marching ants outlines
 
 Download
 --------
-jQuery v1.8.0 or higher required.
+jQuery v1.7.1 or higher required.
 
 Current version: https://github.com/vanderlee/ants/archive/master.zip
 
@@ -22,12 +22,9 @@ Todo
 *	Options: ?delay=Int, zIndex=Int.
 *	Methods: getAttached
 *	Events: enter(element, index), out(element, index)
-*	Handle thickness automatically.
 *	Research how to handle gifs/classes.
-*	Research reset HTML for ants
 *	Research mouseout/enter with negative offset.
 *	Register jquery plugins et al.
-*	Figure out why jQ 1.8+ is required.
 *	Unittesting, even if minimal
 
 Documentation
