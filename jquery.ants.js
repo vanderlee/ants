@@ -169,17 +169,15 @@
 				var attachEvent = this.options.attachOn === 'hover' ? 'mouseenter' : 'focusin',
 					detachEvent = this.options.attachOn === 'hover' ? 'mouseleave' : 'focusout';
 
-				if (this.attached) {
-					this.$element.off(attachEvent).off(detachEvent);
-				}
-
+				this.$element.off(attachEvent).off(detachEvent);
+				
 				if ($.isFunction(value)) {
 					value = null;
 				}
 
 				this.$element
-					.on(attachEvent, value || '>*:not(.ants)', this._handler.attach)
-					.on(detachEvent, value || '>*:not(.ants)', this._handler.detach);
+					.on(attachEvent, value || '*', this._handler.attach)
+					.on(detachEvent, value || '*', this._handler.detach);
 			},
 			
 			reverse: function(value) {
