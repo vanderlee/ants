@@ -20,6 +20,20 @@
 			this.$element = $(element);
 			this.options = $.extend({}, $.fn[pluginName].defaults, options);
 
+			this.sides = {
+				top: $('<div class="ants ants-horizontal ants-top"/>'),
+				left: $('<div class="ants ants-vertical ants-left"/>'),
+				bottom: $('<div class="ants ants-horizontal ants-bottom"/>'),
+				right: $('<div class="ants ants-vertical ants-right"/>')
+			};
+			
+			this._handler = {
+				attach:	undefined,
+				detach:	undefined
+			};
+
+			this.attached = undefined;
+
 			this.init();
 		};
 
@@ -61,13 +75,6 @@
 		init: function () {
 			var self = this;
 
-			this.sides = {
-				top: $('<div class="ants ants-horizontal ants-top"/>'),
-				left: $('<div class="ants ants-vertical ants-left"/>'),
-				bottom: $('<div class="ants ants-horizontal ants-bottom"/>'),
-				right: $('<div class="ants ants-vertical ants-right"/>')
-			};
-
 			$.each(this.sides, function (s, side) {
 				var target;
 				
@@ -85,9 +92,9 @@
 					return;
 				}
 
-				if (!$(this).hasClass('ants') && self.attachOned !== this) {
-					self.attachOned = this;
-					self._attachOn();
+				if (!$(this).hasClass('ants') && self.attached !== this) {
+					self.attached = this;
+					self._attach();
 				}
 			};
 			this._handler.detach = function () {
@@ -95,8 +102,8 @@
 					return;
 				}
 				
-				if (!$(this).hasClass('ants') && typeof self.attachOned !== 'undefined') {
-					self.attachOned = undefined;
+				if (!$(this).hasClass('ants') && typeof self.attached !== 'undefined') {
+					self.attached = undefined;
 					self._detach();
 				}
 			};
@@ -106,20 +113,18 @@
 			this._option.select.call(this, this.options.select);
 		},
 
-		_handler: {
-			attach:	undefined,
-			detach:	undefined,
-		},
-
 		destroy: function () {
+			var attachEvent = this.options.attachOn === 'hover' ? 'mouseenter' : 'focusin',
+				detachEvent = this.options.attachOn === 'hover' ? 'mouseleave' : 'focusout';
+
+			if (this.attached) {
+				this.$element.off(attachEvent).off(detachEvent);
+			}
+
 			$.each(this.sides, function (s, side) {
 				side.remove();
 			});
 
-			if (this._handler.attach) {
-				this.$element.off(this._handler.attach);
-				this.$element.off(this._handler.detach);
-			}
 			this.$element.removeData('plugin_' + pluginName);
 		},
 
@@ -161,22 +166,20 @@
 			},
 
 			select: function(value) {
+				var attachEvent = this.options.attachOn === 'hover' ? 'mouseenter' : 'focusin',
+					detachEvent = this.options.attachOn === 'hover' ? 'mouseleave' : 'focusout';
+
+				if (this.attached) {
+					this.$element.off(attachEvent).off(detachEvent);
+				}
+
 				if ($.isFunction(value)) {
 					value = null;
 				}
 
-				if (this._handler.attach) {
-					this.$element.off(this._handler.attach);
-					this.$element.off(this._handler.detach);
-				}
-
 				this.$element
-					.on(this.options.attachOn === 'hover' ? 'mouseenter' : 'focusin',
-						value || '>*:not(.ants)',
-						this._handler.attach)
-					.on(this.options.attachOn === 'hover' ? 'mouseleave' : 'focusout',
-						value || '>*:not(.ants)',
-						this._handler.detach);
+					.on(attachEvent, value || '>*:not(.ants)', this._handler.attach)
+					.on(detachEvent, value || '>*:not(.ants)', this._handler.detach);
 			},
 			
 			reverse: function(value) {
@@ -199,22 +202,22 @@
 			},
 
 			offset: function(value) {
-				if (this.attachOned) {
+				if (this.attached) {
 					this.options.offset = value;
-					this._attachOn();
+					this._attach();
 				}
 			},
 
 			thickness: function(value) {
-				if (this.attachOned) {
+				if (this.attached) {
 					this.options.thickness = value;
-					this._attachOn();
+					this._attach();
 				}
 			}
 		},
 
-		_attachOn: function () {
-			var $element = $(this.attachOned),
+		_attach: function () {
+			var $element = $(this.attached),
 				width = $element.outerWidth(),
 				height = $element.outerHeight(),
 				offset = $element.offset(),
