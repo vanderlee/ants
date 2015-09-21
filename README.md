@@ -15,6 +15,13 @@ Current version: https://github.com/vanderlee/ants/archive/master.zip
 
 Source code on Github: https://github.com/vanderlee/ants
 
+Images
+------
+This plug-in relies on the presence of two animated GIF images. Examples are
+included to match the default settings.
+If you want different sizes, colors or patterns, you can use this free
+Marching Ants generator at http://ants.toyls.com or create them manually.
+
 Future plans
 ------------
 *	Option "delay" (integer).
@@ -33,8 +40,8 @@ Attaches ants to the children of this element.
 Options
 -------
 ### `appendTo: "element"`
-Append the marching ants DOM elements to the specified selector. Use 'element' to
-append to the element used as a container.
+Append the marching ants DOM elements to the specified selector. Use 'element'
+to append to the element used as a container.
 
 Cannot be set using `option` method.
 
